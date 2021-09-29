@@ -1,6 +1,6 @@
-# Raydium Info (raydium-info)
+# Orca Info (orca-info)
 
-Raydium info powered by aleph.im
+Orca info powered by aleph.im
 
 ## Install the dependencies
 ```bash

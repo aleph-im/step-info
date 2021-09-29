@@ -1,8 +1,8 @@
 {
-  "name": "raydium-info",
+  "name": "orca-info",
   "version": "0.0.1",
-  "description": "Raydium info powered by aleph.im",
-  "productName": "Raydium Info",
+  "description": "Orca info powered by aleph.im",
+  "productName": "Orca Info",
   "author": "Jonathan Schemoul <js@aleph.im>",
   "private": true,
   "scripts": {

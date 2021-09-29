@@ -3,19 +3,15 @@
     <q-header :class="($q.dark.isActive?'text-white':'text-black') + ' bg-transparent q-pa-sm'">
       <q-toolbar>
         <router-link to="/">
-          <img src="../assets/raydium-logo-analytics.svg" height="50" class="q-mr-md" alt="Raydium Analytics" />
+          <img src="../assets/orca-logo-analytics.svg" height="50" class="q-mr-md" alt="Orca Analytics" />
         </router-link>
-        <q-tabs indicator-color="raydium-purple">
+        <q-tabs indicator-color="primary">
           <q-route-tab
             to="/"
             label="Dashboard"
             exact
           />
         </q-tabs>
-        <q-space />
-        <a href="https://aleph.im" target="_blank" rel="noopener">
-          <img src="../assets/aleph-logo-powered.svg" height="30" alt="powered by aleph.im"/>
-        </a>
       </q-toolbar>
     </q-header>
 
@@ -27,6 +23,14 @@
         <span>Loading!</span>
       </template>
     </q-page-container>
+    <q-footer class="bg-transparent">
+      <q-toolbar>
+        <q-space />
+        <a href="https://aleph.im" target="_blank" rel="noopener">
+          <img src="../assets/aleph-logo-powered.svg" height="30" alt="powered by aleph.im"/>
+        </a>
+      </q-toolbar>
+    </q-footer>
   </q-layout>
 </template>
 

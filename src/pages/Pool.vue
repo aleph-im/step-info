@@ -11,13 +11,13 @@
     </h4>
     <div class="flex q-mb-md justify-between">
       <div class="row q-gutter-sm" v-if="pool.stats.price !== null">
-        <q-card class="q-pa-sm bg-dark-60">
+        <q-card class="q-pa-sm bg-orca-gradient-bright">
           <q-avatar size="sm">
             <img :src="pool.pc.logoURI" />
           </q-avatar>
           1 {{ pool.pc.symbol }} = {{ (1/pool.stats.price).toFixed(4) }} {{ pool.coin.symbol }}
         </q-card>
-        <q-card class="q-pa-sm bg-dark-60">
+        <q-card class="q-pa-sm bg-orca-gradient-bright">
           <q-avatar size="sm">
             <img :src="pool.coin.logoURI" />
           </q-avatar>
@@ -25,8 +25,8 @@
         </q-card>
       </div>
       <div class="q-gutter-md">
-        <q-btn color="card" label="Add liquidity" type="a" :href="`https://raydium.io/liquidity/?ammId=${pool.ammId}`" target="_blank" rel="noopener" />
-        <q-btn color="primary" label="Swap" type="a" :href="`https://raydium.io/swap/?ammId=${pool.ammId}`" target="_blank" rel="noopener" />
+        <q-btn color="card" label="Add liquidity" type="a" target="_blank" rel="noopener" disabled />
+        <q-btn color="primary" label="Swap" type="a" target="_blank" rel="noopener" disabled />
       </div>
     </div>
     <div class="flex q-gutter-md q-mb-md items-stretch">
@@ -34,7 +34,7 @@
         <q-card-section>
 
           <div class="bg-raydium-gradient rounded-borders q-pa-one">
-            <q-card class="shadow-0 bg-dark-opacity">
+            <q-card class="shadow-0">
               <q-card-section>
                 <h6 class="q-ma-none q-pb-sm">Total tokens locked</h6>
                 <div
