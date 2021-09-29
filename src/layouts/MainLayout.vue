@@ -1,11 +1,11 @@
 <template>
   <q-layout view="lhh LpR lff" class="q-mb-xl">
-    <q-header :class="($q.dark.isActive?'text-white':'text-black') + ' bg-transparent q-pa-sm'">
+    <q-header :class="($q.dark.isActive?'text-white':'text-black') + ' bg-dark-hollow q-pa-md'">
       <q-toolbar>
         <router-link to="/">
-          <img src="../assets/orca-logo-analytics.svg" height="50" class="q-mr-md" alt="Orca Analytics" />
+          <img src="../assets/orca-logo-analytics.svg" height="50" class="q-mr-lg" alt="Orca Analytics" />
         </router-link>
-        <q-tabs indicator-color="primary">
+        <q-tabs indicator-color="transparent" no-caps>
           <q-route-tab
             to="/"
             label="Dashboard"
