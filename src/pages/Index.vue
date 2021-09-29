@@ -1,7 +1,7 @@
 
 <template>
   <q-page class="q-pa-xl">
-    <div class="bg-orca-gradient rounded-borders q-pa-one">
+    <div class="bg-dark rounded-borders q-pa-one">
       <q-table
         title="Pools 🐳"
         :rows="displayed_pools"
