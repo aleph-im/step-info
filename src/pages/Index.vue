@@ -24,7 +24,14 @@
               <q-avatar size="xs">
                 <img :src="props.row.pc.logoURI">
               </q-avatar>
-                {{ props.row.name }}
+                {{ props.row.name.replace('[aquafarm]', '').replace('[stable]', '') }}
+
+                <span v-if="props.row.name.includes('[aquafarm]')" class="text-h6">
+                  🌊<q-tooltip>aquafarm</q-tooltip>
+                </span>
+                <span v-if="props.row.name.includes('[stable]')" class="text-h6">
+                  ⚖️<q-tooltip>stable</q-tooltip>
+                </span>
               </router-link>
             </q-td>
             <q-td key="tvl" :props="props">
