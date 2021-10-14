@@ -2,13 +2,10 @@
   <q-layout view="lhh LpR lff" class="q-mb-xl">
     <q-header :class="($q.dark.isActive?'text-white':'text-black') + ' bg-dark-hollow q-pa-md'">
       <q-toolbar>
-        <router-link to="/">
-          <img src="../assets/orca-logo.svg" height="40" class="q-mr-lg" alt="Orca Analytics" />
-        </router-link>
         <q-tabs indicator-color="transparent" no-caps>
           <q-route-tab
             to="/"
-            label="Analytics Dashboard"
+            label="Orca Analytics Dashboard"
             exact
           />
         </q-tabs>
