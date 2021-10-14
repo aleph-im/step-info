@@ -3,15 +3,22 @@
     <q-header :class="($q.dark.isActive?'text-white':'text-black') + ' bg-dark-hollow q-pa-md'">
       <q-toolbar>
         <router-link to="/">
-          <img src="../assets/orca-logo-analytics.svg" height="50" class="q-mr-lg" alt="Orca Analytics" />
+          <img src="../assets/orca-logo.svg" height="40" class="q-mr-lg" alt="Orca Analytics" />
         </router-link>
         <q-tabs indicator-color="transparent" no-caps>
           <q-route-tab
             to="/"
-            label="Dashboard"
+            label="Analytics Dashboard"
             exact
           />
         </q-tabs>
+        <template v-if="$q.screen.gt.sm">
+          <q-space />
+          <span class="q-mr-sm">by</span>
+          <a href="https://aleph.im" target="_blank" rel="noopener" class="text-white text-decoration-none">
+            <img src="../assets/alephim-logo-wb.svg" height="30" alt="powered by aleph.im"/>
+          </a>
+        </template>
       </q-toolbar>
     </q-header>
 
@@ -25,10 +32,13 @@
     </q-page-container>
     <q-footer class="bg-transparent">
       <q-toolbar>
-        <q-space />
-        <a href="https://aleph.im" target="_blank" rel="noopener">
-          <img src="../assets/aleph-logo-powered.svg" height="30" alt="powered by aleph.im"/>
-        </a>
+        <template v-if="$q.screen.lt.md">
+          <q-space />
+          <span class="q-mr-sm">by</span>
+          <a href="https://aleph.im" target="_blank" rel="noopener" class="text-white text-decoration-none">
+            <img src="../assets/alephim-logo-wb.svg" height="30" alt="powered by aleph.im"/>
+          </a>
+        </template>
       </q-toolbar>
     </q-footer>
   </q-layout>
