@@ -24,7 +24,7 @@
               <q-avatar size="xs">
                 <img :src="props.row.pc.logoURI">
               </q-avatar>
-                {{ props.row.name.replace('[aquafarm]', '').replace('[stable]', '') }}
+                {{ props.row.coin.symbol }}-{{ props.row.pc.symbol }}
 
                 <span v-if="props.row.name.includes('[aquafarm]')" class="text-h6">
                   🌊<q-tooltip>aquafarm</q-tooltip>
