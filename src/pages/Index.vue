@@ -1,6 +1,24 @@
 
 <template>
   <q-page class="q-pa-xl">
+    <div class="row q-col-gutter-md q-mb-md">
+      <div class="col-12 col-md-6">
+        <q-card>
+          <q-card-section>
+            <h4 class="text-subtitle1 q-ma-none">TVL</h4>
+            <p class="text-h5 q-my-md text-center">{{ numeral(tvl_usd).format("0,0 $") }}</p>
+          </q-card-section>
+        </q-card>
+      </div>
+      <div class="col-12 col-md-6">
+        <q-card>
+          <q-card-section>
+            <h4 class="text-subtitle1 q-ma-none">24h Volume</h4>
+            <p class="text-h5 q-my-md text-center">{{ numeral(vol24h_usd).format("0,0 $") }}</p>
+          </q-card-section>
+        </q-card>
+      </div>
+    </div>
     <div class="bg-dark rounded-borders q-pa-one">
       <q-table
         title="Pools 🐳"
@@ -69,6 +87,12 @@ export default defineComponent({
       })).sort((a, b) => (
         a.tvl < b.tvl
       ))
+    },
+    vol24h_usd() {
+      return this.pools.reduce((v0, v1) => (v0 + v1.stats.vol24h_usd), 0)
+    },
+    tvl_usd() {
+      return this.pools.reduce((v0, v1) => (v0 + v1.stats.tvl_usd), 0)
     }
   },
   async setup() {
