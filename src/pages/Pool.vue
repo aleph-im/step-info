@@ -11,13 +11,13 @@
     </h4>
     <div class="flex q-mb-md justify-between">
       <div class="row q-gutter-sm" v-if="pool.stats.price !== null">
-        <q-card class="q-pa-sm bg-orca-gradient-bright">
+        <q-card class="q-pa-sm bg-step-gradient-bright">
           <q-avatar size="sm">
             <img :src="pool.pc.logoURI" />
           </q-avatar>
           1 {{ pool.pc.symbol }} = {{ (1/pool.stats.price).toFixed(4) }} {{ pool.coin.symbol }}
         </q-card>
-        <q-card class="q-pa-sm bg-orca-gradient-bright">
+        <q-card class="q-pa-sm bg-step-gradient-bright">
           <q-avatar size="sm">
             <img :src="pool.coin.logoURI" />
           </q-avatar>
