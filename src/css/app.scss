@@ -6,17 +6,7 @@ html { font-family: 'Inter', sans-serif; }
 }
 
 body.body--dark {
-  background: linear-gradient(150deg, rgba(158,167,230,0.25) 0%, rgba(55,69,165,0) 34%),
-  linear-gradient(318deg, rgba(158,167,230,0.08) 0%, rgba(55,69,165,0) 34%),
-  linear-gradient(15deg, rgba(22,29,87,1) 0%, rgba(15,19,60,1) 23%, rgba(12,16,51,1) 100%);
-  // background: url("../assets/Jellyfish.b68bc052.svg") no-repeat scroll left 5% top 250px,
-  //             url("../assets/SmallSchool.0a954e8b.svg") no-repeat scroll right 2.5% bottom 150px,
-  //             url("../assets/Coral_Reef.edd242a9.svg") no-repeat scroll right bottom,
-  //             url("../assets/BG_Shimmer_Short.b0836315.svg") repeat-x scroll left top,
-  //             url("../assets/BG_Waves_Top.bea5a245.svg") no-repeat scroll left top / 75%,
-  //             url("../assets/BG_Waves_Bottom.24224202.svg") no-repeat scroll right bottom / 65%,
-  //             url("../assets/BG_Gradient.ecaeaf55.svg") no-repeat scroll left top / 100%,
-  //             rgb(13, 15, 53) none repeat scroll 0% 0%;
+  background: #000000;
 }
 
 table a {
@@ -40,7 +30,7 @@ table a {
 
 
 .expander-title {
-background: #263944;
+  background: #263944;
 }
 
 .bg-dark-60 {
@@ -48,7 +38,7 @@ background: #4e60a033;
 }
 
 .bg-dark-hollow {
-  background-color: rgba(13, 15, 53, 0.6);
+  background-color: #000000;
 }
 
 .bg-dark-50 {
@@ -81,7 +71,7 @@ background: #C8CBCD;
 }
 
 .bg-orca-gradient-bright {
-  background: rgba(0, 0, 0, 0) linear-gradient(rgb(56, 67, 171) 0%, rgb(29, 37, 122) 100%) repeat scroll 0% 0%;
+  background: rgba(0, 0, 0, 0) linear-gradient(rgb(6, 214, 160) 0%, rgb(20, 20, 20) 100%) repeat scroll 0% 0%;
 }
 
 .bg-raydium-purple {
@@ -89,7 +79,7 @@ background: #C8CBCD;
 }
 
 .text-raydium-purple {
-  color: #6a49fe;
+  color: #06D6A0;
 }
 
 .q-pa-one {
@@ -141,7 +131,7 @@ margin-bottom: 1em;
 
 .body--dark {
 .bg-card {
-  background: #4e60a033;
+  background: #141414;
   border-color: #383838;
 }
 
@@ -264,4 +254,8 @@ td.address {
 	
 	/* for good looks */
 	padding: 10px;
+}
+
+.q-tab__indicator {
+    color: #06D6A0 !important;
 }

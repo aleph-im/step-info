@@ -3,9 +3,12 @@
     <q-header :class="($q.dark.isActive?'text-white':'text-black') + ' bg-dark-hollow q-pa-md'">
       <q-toolbar>
         <q-tabs indicator-color="transparent" no-caps>
+          <a href="https://step.finance" target="_blank" rel="noopener" class="text-white text-decoration-none">
+            <img src="../assets/step.svg" height="30" alt="Step"/>
+          </a>
           <q-route-tab
             to="/"
-            label="Orca Analytics Dashboard"
+            label="Analytics Dashboard"
             exact
           />
         </q-tabs>
