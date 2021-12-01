@@ -34,7 +34,7 @@ query pool_detail($address: String!) {
     }
   }
 
-  pool_hourly_data(address: $address) {
+  pool_hourly_data(address: $address, reverse: true, limit: 1000) {
     time
     price
     tvl_coin
