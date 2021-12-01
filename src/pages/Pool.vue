@@ -247,6 +247,9 @@ export default defineComponent({
               autoSelected: 'zoom'
             }
           },
+          animations: {
+            enabled: false
+          }
         },
         dataLabels: {
           enabled: false,
