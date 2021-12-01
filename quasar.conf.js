@@ -147,9 +147,9 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: `Orca Info`,
-        short_name: `Orca Info`,
-        description: `Orca info powered by aleph.im`,
+        name: `Step Info`,
+        short_name: `Step Info`,
+        description: `Step info powered by aleph.im`,
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
@@ -214,7 +214,7 @@ module.exports = configure(function (ctx) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'orca-info'
+        appId: 'step-info'
       },
 
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain

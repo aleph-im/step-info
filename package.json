@@ -1,8 +1,8 @@
 {
-  "name": "orca-info",
+  "name": "ostep-info",
   "version": "0.0.1",
-  "description": "Orca info powered by aleph.im",
-  "productName": "Orca Info",
+  "description": "Step info powered by aleph.im",
+  "productName": "Step Info",
   "author": "Jonathan Schemoul <js@aleph.im>",
   "private": true,
   "scripts": {

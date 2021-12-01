@@ -1,6 +1,6 @@
-# Orca Info (orca-info)
+# Step Info (step-info)
 
-Orca info powered by aleph.im
+Step info powered by aleph.im
 
 ## Install the dependencies
 ```bash
