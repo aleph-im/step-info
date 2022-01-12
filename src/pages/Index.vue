@@ -1,5 +1,11 @@
 
 <template>
+  <div class="q-pa-md q-gutter-sm" v-if="synced == false">
+    <q-banner inline-actions rounded class="text-white">
+      <q-icon name="warning" class="text-red" style="font-size: 1.2rem;" />
+      indexing in progress, data is not 100% accurate.
+    </q-banner>
+  </div>
   <q-page :class="$q.screen.gt.sm ? 'q-pa-xl': 'q-pa-sm'">
     <div class="row q-col-gutter-md q-mb-md">
       <div class="col-12 col-md-6">
@@ -69,6 +75,7 @@
 import { defineComponent } from 'vue'
 
 import poolquery from '../queries/pools.gql'
+import statequery from '../queries/state.gql'
 import { client } from '../services/graphql'
 import { get_token } from '../services/tokens'
 import numeral from "numeral"
@@ -96,10 +103,18 @@ export default defineComponent({
     }
   },
   async setup() {
+    let state = await client.request(statequery);
+    let synced = true;
+    let timeDiff = (+new Date()/1000) - state.status.last_blockTime;
+    if(state.status.state !== "OK" || timeDiff > 600) {
+      synced = false
+    }
+
     let result = await client.request(poolquery)
     console.log(result)
 
     return {
+      synced: synced,
       pools: result.pools,
       poolcols: [
         {

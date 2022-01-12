@@ -1,4 +1,10 @@
 <template>
+  <div class="q-pa-md q-gutter-sm" v-if="synced == false">
+    <q-banner inline-actions rounded class="text-white">
+      <q-icon name="warning" class="text-red" style="font-size: 1.2rem;" />
+      indexing in progress, data is not 100% accurate.
+    </q-banner>
+  </div>
   <q-page>
     <h4>
       <q-avatar>
@@ -15,13 +21,13 @@
           <q-avatar size="sm">
             <img :src="pool.pc.logoURI" />
           </q-avatar>
-          1 {{ pool.pc.symbol }} = {{ (1/pool.stats.price).toFixed(4) }} {{ pool.coin.symbol }}
+          1 {{ pool.pc.symbol }} = {{ pool.stats.price < 99 ? (1/pool.stats.price).toFixed(4) : (1/pool.stats.price).toFixed(8) }} {{ pool.coin.symbol }} {{pool.isUSD ? "" : "(" + numeral(1/pool.stats.price*pool.stats.price_usd).format("0,0.00 $") + ")"}}
         </q-card>
         <q-card class="q-pa-sm bg-step-gradient-bright">
           <q-avatar size="sm">
             <img :src="pool.coin.logoURI" />
           </q-avatar>
-          1 {{ pool.coin.symbol }} = {{ (pool.stats.price).toFixed(4) }} {{ pool.pc.symbol }}
+          1 {{ pool.coin.symbol }} = {{ pool.stats.price > 0.1 ? (pool.stats.price).toFixed(4) : (pool.stats.price).toFixed(8) }} {{ pool.pc.symbol }} {{pool.isUSD ? "" : "(" + numeral(pool.stats.price_usd).format("0,0.00 $") + ")"}}
         </q-card>
       </div>
       <div class="q-gutter-md">
@@ -127,6 +133,7 @@
 import { defineComponent } from "vue"
 
 import poolquery from "../queries/pool_detail.gql"
+import statequery from '../queries/state.gql'
 import { client } from "../services/graphql"
 import { get_token } from '../services/tokens'
 import numeral from "numeral";
@@ -148,35 +155,49 @@ export default defineComponent({
   computed: {
     priceSeries() {
       let values = []
+      let pcValues = []
       let last_value = null
+      let last_pc_value = null
+      let pool = this.pool_hourly_data[0]?.pool
       for (let point of this.pool_hourly_data) {
-        if (point.price !== null) {
+        if (point.price_usd !== null) {
+          last_value = point.price_usd
+          last_pc_value = point.price_usd/point.price
+        } else if (point.price !== null) {
           last_value = point.price
         }
-        values.push(last_value)
+        if(!pool?.coin?.isUSD) {
+          values.push(last_value)
+        }
+        pcValues.push(last_pc_value)
       }
       return [
         {
-          name: "price",
+          name: pool?.coin?.symbol,
           data: values,
         },
+        {
+          name: pool?.pc?.symbol,
+          data: pcValues,
+        }
       ]
     },
     volumeSeries() {
       return [
         {
           name: "volume",
-          data: this.pool_hourly_data.map((m) => m.volume),
+          data: this.pool_hourly_data.map((m) => m.volume_usd),
         },
       ]
     },
     tvlSeries() {
       let values = []
       let last_value = null
-      let has_usd = this.pool.pc.symbol.includes("USD")
+      //const USDs = ["USD", "CASH", "PAI"]
+      //let has_usd = USDs.some(symbol => this.pool.pc.symbol.includes(symbol))
       let tvl_key = "tvl_usd"
-      if (!has_usd)
-        tvl_key = "tvl_coin"
+      //if (!has_usd)
+      //  tvl_key = "tvl_coin"
       for (let point of this.pool_hourly_data) {
         if (point[tvl_key] !== null) {
           last_value = point[tvl_key]
@@ -195,7 +216,7 @@ export default defineComponent({
         yaxis: {
           labels: {
             formatter: function (val) {
-              return val.toFixed(4);
+              return numeral(val).format("0,0.000 $");
             }
           }
         },
@@ -203,11 +224,12 @@ export default defineComponent({
       }
     },
     tvlChartOptions() {
-      let has_usd = this.pool.pc.symbol.includes("USD")
+      //const USDs = ["USD", "CASH", "PAI"]
+      //let has_usd = USDs.some(symbol => this.pool.pc.symbol.includes(symbol))
       let tvl_format = "0,0 $"
-      if (!has_usd) {
+      /*if (!has_usd) {
         tvl_format = `0,0 ${this.pool.coin.symbol}`
-      }
+      }*/
       return {
         yaxis: {
           labels: {
@@ -272,17 +294,18 @@ export default defineComponent({
         xaxis: {
           labels: {
             formatter: function (val) {
-              return moment(val).format("MMM Do ha");
+              return moment(val).format("MMM Do ha m");
             }
           },
           type: "datetime",
         },
         legend: {
+          position: "top",
           horizontalAlign: "left",
           labels: {
-            color: ["#fff"]
+            colors: ["#fff"]
           },
-          show: false
+          show: true
         },
         theme: {
           palette: "palette1"
@@ -295,12 +318,60 @@ export default defineComponent({
     }
   },
   async setup(props) {
+    let state = await client.request(statequery);
+    let synced = true;
+    let timeDiff = (+new Date()/1000) - state.status.last_blockTime;
+    if(state.status.state !== "OK" || timeDiff > 600) {
+      synced = false
+    }
     let result = await client.request(poolquery, {
       address: props.address,
     });
+
+    const squash_ts_to = (d, timeframe) => {
+      let ms = 1000 * 60 * timeframe;
+      let roundedDate = new Date(Math.ceil(d.getTime() / ms) * ms); // close time
+      return roundedDate.toISOString();
+    }
+
+    const squashTimeframe = (
+      result.pool_hourly_data.length > 20
+      && (
+        squash_ts_to(new Date(result.pool_hourly_data[0].time), 15) != result.pool_hourly_data[0].time
+          || squash_ts_to(new Date(result.pool_hourly_data[1].time), 15) != result.pool_hourly_data[1].time
+          || squash_ts_to(new Date(result.pool_hourly_data[2].time), 15) != result.pool_hourly_data[2].time
+      )
+    ) ? true : false;
+
+    // if timeframe less than 15min
+    if(squashTimeframe) {
+      const history = {};
+      // Aggregate data to each 15min if needed
+      result.pool_hourly_data.map((current, index, arrRef) => {
+		    const time = squash_ts_to(new Date(current.time), 15)
+        if(history[time]) {
+          history[time].index = index
+          history[time].time = time
+          history[time].usd_price = current.usd_price;
+          history[time].tvl_coin += current.tvl_coin;
+          history[time].tvl_pc += current.tvl_pc;
+          history[time].tvl_usd += current.tvl_usd;
+          history[time].volume += current.volume;
+          if(current.time > arrRef[history[time].index].time) {
+            history[time].price = current.price;
+          }
+        } else {
+          history[time] = current
+          history[time].index = index
+        }
+      })
+      result.pool_hourly_data = Object.values(history)
+    }
+
     result.pool.coin = get_token(result.pool.coin.address, result.pool.coin)
     result.pool.pc = get_token(result.pool.pc.address, result.pool.pc)
     return {
+      synced: synced,
       numeral,
       ...result,
     };
