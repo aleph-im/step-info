@@ -39,15 +39,23 @@
             <a v-else :href="`https://solscan.io/tx/${props.row.signature}`" target="_blank" rel="noopener">
               {{props.row.type}}
             </a>
+            <span v-if="props.row.routedSwap" class="q-ml-md">
+            <a :href="`https://solscan.io/tx/${props.row.signature}`" target="_blank" rel="noopener">
+              <q-badge outline color="secondary">RoutedSwap:
+                {{props.row.routedSwap.meta.source_token ? get_token(props.row.routedSwap.meta.source_token.address, props.row.routedSwap.meta.source_token).symbol : "???" }} =>
+                {{props.row.routedSwap.meta.target_token ? get_token(props.row.routedSwap.meta.target_token.address, props.row.routedSwap.meta.target_token).symbol : "???" }}
+              </q-badge>
+            </a>
+            </span>
           </q-td>
           <q-td key="usd_value" :props="props">
             {{ numeral(props.row.usd_value).format("0,0[.]00 $") }}
           </q-td>
           <q-td key="source_amount" :props="props">
-            <template v-if="props.row.source_token">
+            <template v-if="props.row.source_amount">
             {{ numeral(
               props.row.source_amount).divide(10**props.row.source_token.decimals)
-              .format(`0,0[.]00`) }} {{props.row.source_token.symbol}}
+              .format(`0,0.[00]`) }} {{props.row.source_token.symbol}}
             </template>
           </q-td>
           <q-td key="target_amount" :props="props">
@@ -81,21 +89,29 @@ import { get_token } from '../services/tokens'
 export default defineComponent({
   name: 'EventsTable',
   props: [
-    'events'
+    'events',
+    'ammId'
   ],
   computed: {
     filteredEvents() {
       let events = this.events.filter((ev) => (
-        (!ev.meta.usd_value)||(ev.meta.usd_value > 10)
+          ev.meta.pool?.ammId && (ev.meta.pool.ammId == this.ammId)
+        //(!ev.meta.usd_value)||(ev.meta.usd_value > 10)
+      ))
+      this.routedSwapEvents = this.events.filter((ev) => (
+        ev.meta.pool?.ammId && (ev.meta.pool.ammId != this.ammId)
       ))
       if (this.tab === "all")
         return events
       else {
-        
         return events.filter((ev) => (ev.type.includes(this.tab)))
       }
     },
     formattedEvents() {
+      const routedSwapInfo = {}
+      this.routedSwapEvents.forEach((ev) => {
+        routedSwapInfo[ev.signature] = {meta: ev.meta}
+      })
       return this.filteredEvents.map((ev) => ({
         title: ev.type,
         usd_value: ev.meta.usd_value,
@@ -103,6 +119,7 @@ export default defineComponent({
         source_token: ev.meta.source_amount ? ev.meta.source_token : (ev.meta.pool ? ev.meta.pool.pc : null),
         target_amount: ev.meta.target_amount ? ev.meta.target_amount : ev.meta.coin_amount,
         target_token: ev.meta.target_amount ? ev.meta.target_token : (ev.meta.pool ? ev.meta.pool.coin : null),
+        routedSwap: routedSwapInfo[ev.signature] ? routedSwapInfo[ev.signature] : null,
         owner: ev.meta.owner,
         ...ev
       }))
@@ -111,6 +128,7 @@ export default defineComponent({
   data() {
     return {
       tab: "all",
+      routedSwapEvents: [],
       moment: moment,
       numeral: numeral,
       get_token: get_token,

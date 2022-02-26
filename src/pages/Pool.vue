@@ -76,7 +76,8 @@
           <p class="text-h5">
             {{ numeral(pool.stats.tvl_usd).format("0,0 $") }}
           </p>
-          <p class="q-pt-md text-bold q-mb-none">Volume (24h)</p>
+          <p class="q-pt-md text-bold q-mb-none">Volume (24h) <price-change :change="pool.stats.change_vol24h" />
+</p>
           <p class="text-h5">
             {{ numeral(pool.stats.vol24h_usd).format("0,0 $") }}
           </p>
@@ -140,9 +141,10 @@ import numeral from "numeral";
 import moment from "moment";
 import EventsTable from "src/components/EventsTable.vue";
 import EventsHistory from "src/components/EventsHistory.vue";
+import PriceChange from "../components/PriceChange.vue";
 
 export default defineComponent({
-  components: { EventsTable, EventsHistory },
+  components: { EventsTable, EventsHistory, PriceChange },
   name: "PoolPage",
   props: {
     address: String,
@@ -156,6 +158,7 @@ export default defineComponent({
     priceSeries() {
       let values = []
       let pcValues = []
+      let nativePrice = []
       let last_value = null
       let last_pc_value = null
       let pool = this.pool_hourly_data[0]?.pool
@@ -168,8 +171,11 @@ export default defineComponent({
         }
         if(!pool?.coin?.isUSD) {
           values.push(last_value)
+        } else {
+          values.push(1)
         }
         pcValues.push(last_pc_value)
+        nativePrice.push(point.price)
       }
       return [
         {
@@ -179,6 +185,10 @@ export default defineComponent({
         {
           name: pool?.pc?.symbol,
           data: pcValues,
+        },
+        {
+          name: pool?.coin?.symbol + "/" + pool?.pc?.symbol,
+          data: nativePrice,
         }
       ]
     },
@@ -213,10 +223,50 @@ export default defineComponent({
     },
     priceChartOptions() {
       return {
-        yaxis: {
+        yaxis: [
+          {
+            show: false,
+            labels: {
+              formatter: function (val, opt) {
+                if(opt?.seriesIndex == 2) {
+                  return numeral(val).format("0,0.[0000000]");
+                }
+                return numeral(val).format("0,0.[0000000] $");
+              }
+            }
+          },
+          {
+            show: true,
+            min: 0,
+            labels: {
+              formatter: function (val, opt) {
+                if(opt?.seriesIndex == 2) {
+                  return numeral(val).format("0,0.[0000000]");
+                }
+                return numeral(val).format("0,0.[0000] $");
+              }
+            }
+          },
+          {
+            show: false,
+            labels: {
+              formatter: function (val, opt) {
+                if(opt?.seriesIndex == 2) {
+                  return numeral(val).format("0,0.[0000000] ");
+                }
+                return numeral(val).format("0,0.[0000000] $");
+              }
+            }
+          }
+        ],
+        _yaxis: {
           labels: {
-            formatter: function (val) {
-              return numeral(val).format("0,0.000 $");
+            formatter: function (val, opt) {
+              console.log(opt)
+              if(opt?.seriesIndex == 2) {
+                return numeral(val).format("0,0.[0000000]");
+              }
+              return numeral(val).format("0,0.[0000000] $");
             }
           }
         },

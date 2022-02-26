@@ -56,7 +56,6 @@ export default defineComponent({
 
   async setup () {
     const leftDrawerOpen = ref(false)
-
     return {
     }
   }

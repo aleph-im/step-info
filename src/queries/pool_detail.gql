@@ -33,6 +33,7 @@ query pool_detail($address: String!) {
       tvl_coin
       tvl_pc
       tvl_usd
+      change_vol24h
     }
   }
 

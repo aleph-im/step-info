@@ -1,5 +1,5 @@
 <template>
-  <events-table :events="events" />
+  <events-table :events="events" :ammId="ammId" />
 </template>
 
 <script>
@@ -18,6 +18,7 @@ export default defineComponent({
       address: props.address,
     });
     return {
+      ammId: props.address,
       ...result,
     }
   },

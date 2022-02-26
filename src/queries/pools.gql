@@ -29,7 +29,13 @@
         stats {
             tvl_usd
             price
+            price_usd
             vol24h_usd
+            vol7d_usd
+            change_1h
+            change_24h
+            change_7d
+            change_vol24h
         }
     }
 }

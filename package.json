@@ -20,7 +20,9 @@
     "quasar": "^2.0.0-beta.1",
     "vue-i18n": "^9.0.0-beta.0",
     "vue3-apexcharts": "^1.4.0",
-    "vuex": "^4.0.1"
+    "vuex": "^4.0.1",
+    "bn.js": "^5.2.0",
+    "luxon": "^2.0.2"
   },
   "devDependencies": {
     "@quasar/app": "^3.0.0-beta.1",

@@ -1,0 +1,7 @@
+query pool_detail {
+  aggregated_pools_stats {
+    time
+    tvl_usd
+    volume_usd
+  }
+}
