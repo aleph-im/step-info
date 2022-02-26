@@ -104,6 +104,16 @@
               {{ numeral(props.row.vol24h).format("0,0 $") }}<br>
               <price-change :change="props.row.change_vol24h" />
             </q-td>
+            <q-td key="last_trade" :props="props">
+              <span class="ma-l-md" v-if="props.row.last_trade">
+                <q-badge outline color="secondary">
+                  {{moment.unix(props.row.last_trade).fromNow()}}
+                </q-badge>
+              </span>
+              <span v-else>
+                -
+              </span>
+            </q-td>
           </q-tr>
         </template>
       </q-table>
@@ -150,6 +160,7 @@ export default defineComponent({
         change_24h: 0-(pool.stats.change_24h),
         change_7d: 0-(pool.stats.change_7d),
         change_vol24h: pool.stats.change_vol24h,
+        last_trade: pool.stats.last_blockTime,
       })).sort((a, b) => (
         a.tvl < b.tvl
       ))
@@ -240,9 +251,16 @@ export default defineComponent({
           'label': 'Volume (24h)',
           'field': 'vol24h',
           sortable: true
+        },
+        {
+          'name': 'last_trade',
+          'label': 'Last Trade',
+          'field': 'last_trade',
+          sortable: false
         }
       ],
-      numeral: numeral
+      numeral: numeral,
+      moment: moment,
     }
   }
 

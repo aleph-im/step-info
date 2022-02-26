@@ -36,6 +36,7 @@
             change_24h
             change_7d
             change_vol24h
+            last_blockTime
         }
     }
 }
