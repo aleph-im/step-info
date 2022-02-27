@@ -6,7 +6,7 @@
     :options="options"
     :series="series"
   />
-  <no-data v-else height="263px" />
+  <no-data v-else height="163px" />
 </template>
 
 <script>

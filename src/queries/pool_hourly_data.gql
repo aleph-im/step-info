@@ -1,0 +1,17 @@
+query pool_stats($address: String!) {
+  pool_hourly_data(address: $address, reverse: true, limit: 1500) {
+    time
+    price
+    price_usd
+    tvl_coin
+    tvl_pc
+    tvl_usd
+    volume
+    volume_usd
+    pool {
+      isUSD
+      coin { symbol, isUSD }
+      pc { symbol, isUSD }
+    }
+  }
+}

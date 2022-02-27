@@ -112,6 +112,12 @@
           </q-tab-panels>
         </q-card>
       </div>
+        <div v-else class="flex flex-center col-grow">
+          <q-spinner-pie
+            color="white"
+            size="4em"
+          />
+        </div>
     </div>
     <suspense>
       <template #default>
@@ -131,9 +137,10 @@
 
 
 <script>
-import { defineComponent } from "vue"
+  import { defineComponent, ref } from "vue"
 
 import poolquery from "../queries/pool_detail.gql"
+import poolHourlyData from "../queries/pool_hourly_data.gql"
 import statequery from '../queries/state.gql'
 import { client } from "../services/graphql"
 import { get_token } from '../services/tokens'
@@ -144,7 +151,7 @@ import EventsHistory from "src/components/EventsHistory.vue";
 import PriceChange from "../components/PriceChange.vue";
 
 export default defineComponent({
-  components: { EventsTable, EventsHistory, PriceChange },
+  components: { EventsTable, EventsHistory, PriceChange},
   name: "PoolPage",
   props: {
     address: String,
@@ -370,6 +377,7 @@ export default defineComponent({
   async setup(props) {
     let state = await client.request(statequery);
     let synced = true;
+    const pool_hourly_data = ref(null)
     let timeDiff = (+new Date()/1000) - state.status.last_blockTime;
     if(state.status.state !== "OK" || timeDiff > 600) {
       synced = false
@@ -384,39 +392,44 @@ export default defineComponent({
       return roundedDate.toISOString();
     }
 
-    const squashTimeframe = (
-      result.pool_hourly_data.length > 20
-      && (
-        squash_ts_to(new Date(result.pool_hourly_data[0].time), 15) != result.pool_hourly_data[0].time
-          || squash_ts_to(new Date(result.pool_hourly_data[1].time), 15) != result.pool_hourly_data[1].time
-          || squash_ts_to(new Date(result.pool_hourly_data[2].time), 15) != result.pool_hourly_data[2].time
-      )
-    ) ? true : false;
+    client.request(poolHourlyData, {
+      address: props.address,
+    }).then((data) => {
+      const squashTimeframe = (
+        data.pool_hourly_data.length > 20
+          && (
+            squash_ts_to(new Date(data.pool_hourly_data[0].time), 15) != data.pool_hourly_data[0].time
+              || squash_ts_to(new Date(data.pool_hourly_data[1].time), 15) != data.pool_hourly_data[1].time
+              || squash_ts_to(new Date(data.pool_hourly_data[2].time), 15) != data.pool_hourly_data[2].time
+          )
+      ) ? true : false;
 
-    // if timeframe less than 15min
-    if(squashTimeframe) {
-      const history = {};
-      // Aggregate data to each 15min if needed
-      result.pool_hourly_data.map((current, index, arrRef) => {
-		    const time = squash_ts_to(new Date(current.time), 15)
-        if(history[time]) {
-          history[time].index = index
-          history[time].time = time
-          history[time].usd_price = current.usd_price;
-          history[time].tvl_coin += current.tvl_coin;
-          history[time].tvl_pc += current.tvl_pc;
-          history[time].tvl_usd += current.tvl_usd;
-          history[time].volume += current.volume;
-          if(current.time > arrRef[history[time].index].time) {
-            history[time].price = current.price;
+      // if timeframe less than 15min
+      if(squashTimeframe) {
+        const history = {};
+        // Aggregate data to each 15min if needed
+        data.pool_hourly_data.map((current, index, arrRef) => {
+		      const time = squash_ts_to(new Date(current.time), 15)
+          if(history[time]) {
+            history[time].index = index
+            history[time].time = time
+            history[time].usd_price = current.usd_price;
+            history[time].tvl_coin += current.tvl_coin;
+            history[time].tvl_pc += current.tvl_pc;
+            history[time].tvl_usd += current.tvl_usd;
+            history[time].volume += current.volume;
+            if(current.time > arrRef[history[time].index].time) {
+              history[time].price = current.price;
+            }
+          } else {
+            history[time] = current
+            history[time].index = index
           }
-        } else {
-          history[time] = current
-          history[time].index = index
-        }
-      })
-      result.pool_hourly_data = Object.values(history)
-    }
+        })
+        data.pool_hourly_data = Object.values(history)
+      }
+      pool_hourly_data.value = data.pool_hourly_data
+    })
 
     result.pool.coin = get_token(result.pool.coin.address, result.pool.coin)
     result.pool.pc = get_token(result.pool.pc.address, result.pool.pc)
@@ -424,6 +437,7 @@ export default defineComponent({
       synced: synced,
       numeral,
       ...result,
+      pool_hourly_data
     };
   },
 });
