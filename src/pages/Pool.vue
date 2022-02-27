@@ -31,8 +31,8 @@
         </q-card>
       </div>
       <div class="q-gutter-md">
-        <q-btn color="card" label="Add liquidity" type="a" target="_blank" rel="noopener" disabled />
-        <q-btn color="primary" label="Swap" type="a" target="_blank" rel="noopener" disabled />
+        <q-btn color="card" label="Add liquidity" type="a" target="_blank" rel="noopener" :href="`https://app.step.finance/#/liquidity/add?a=${pool.coin.address}&b=${pool.pc.address}`"/>
+        <q-btn color="primary" label="Swap" type="a" target="_blank" rel="noopener" :href="`https://app.step.finance/#/swap?a=${pool.coin.address}&b=${pool.pc.address}`"/>
       </div>
     </div>
     <div class="flex q-gutter-md q-mb-md items-stretch">
