@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lhh LpR lff" class="q-mb-xl">
+  <q-layout view="lhh LpR lff">
     <q-header :class="($q.dark.isActive?'text-white':'text-black') + ' bg-dark-hollow q-pa-md'">
       <q-toolbar>
         <q-tabs indicator-color="transparent" no-caps>
@@ -12,17 +12,10 @@
             exact
           />
         </q-tabs>
-        <template v-if="$q.screen.gt.sm">
-          <q-space />
-          <span class="q-mr-sm">by</span>
-          <a href="https://aleph.im" target="_blank" rel="noopener" class="text-white text-decoration-none">
-            <img src="../assets/alephim-logo-wb.svg" height="30" alt="powered by aleph.im"/>
-          </a>
-        </template>
       </q-toolbar>
     </q-header>
 
-    <q-page-container class="content">
+    <q-page-container class="content q-pa-xs-sm q-pa-md-md">
       <template #default>
         <router-view />
       </template>
@@ -30,28 +23,20 @@
         <span>Loading!</span>
       </template>
     </q-page-container>
-    <q-footer class="bg-transparent">
-      <q-toolbar>
-        <template v-if="$q.screen.lt.md">
-          <q-space />
-          <span class="q-mr-sm">by</span>
-          <a href="https://aleph.im" target="_blank" rel="noopener" class="text-white text-decoration-none">
-            <img src="../assets/alephim-logo-wb.svg" height="30" alt="powered by aleph.im"/>
-          </a>
-        </template>
-      </q-toolbar>
-    </q-footer>
+    <main-footer />
   </q-layout>
 </template>
 
 <script>
 
 import { defineComponent, ref, onErrorCaptured } from 'vue'
+import MainFooter from "./MainFooter.vue";
 
 export default defineComponent({
   name: 'MainLayout',
 
   components: {
+    MainFooter
   },
 
   async setup () {
@@ -64,11 +49,7 @@ export default defineComponent({
 
 <style lang="scss">
 .logo {
-  .q-badge {
-    position: absolute;
-    margin-top: -0.2rem;
-    margin-left: -1rem;
-  }
+    line-header: 0;
 }
 
 .q-drawer {
@@ -186,4 +167,9 @@ export default defineComponent({
 .rounded-forced {
   border-radius: 10px !important;
 }
+
+.q-layout {
+  padding-bottom: 20px;
+}
+
 </style>

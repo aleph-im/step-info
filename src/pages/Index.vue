@@ -58,7 +58,7 @@
 
     <div class="bg-dark rounded-borders q-pa-one">
       <q-table
-        title="Pools 🐳"
+        title="Pools"
         :rows="displayed_pools"
         :columns="poolcols"
         row-key="name"
