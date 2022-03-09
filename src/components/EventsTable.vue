@@ -17,10 +17,13 @@
       <q-tab name="withdraw" label="Removes" />
     </q-tabs>
     <q-table :rows="formattedEvents"
-            :columns="eventCols"
-            flat
-            card-class="bg-transparent"
-            :pagination="{rowsPerPage: 15}">
+             :columns="eventCols"
+             flat
+             card-class="bg-transparent"
+             :pagination="{rowsPerPage: 15}"
+             :loading="loading"
+             color
+             >
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td key="title" :props="props" class="text-white" style="min-width: 350px">
@@ -94,6 +97,7 @@ export default defineComponent({
   ],
   computed: {
     filteredEvents() {
+      this.loading = this.events.length > 0 ? false : true
       let events = this.events.filter((ev) => (
           ev.meta.pool?.ammId && (ev.meta.pool.ammId == this.ammId)
         //(!ev.meta.usd_value)||(ev.meta.usd_value > 10)
@@ -129,6 +133,7 @@ export default defineComponent({
     return {
       tab: "all",
       routedSwapEvents: [],
+      loading: true,
       moment: moment,
       numeral: numeral,
       get_token: get_token,

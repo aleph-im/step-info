@@ -100,36 +100,25 @@
           </q-tabs>
           <q-separator />
           <q-tab-panels v-model="chartTab" animated>
-            <q-tab-panel name="price" class="bg-dark-60">
+            <q-tab-panel name="price" class="bg-card">
               <apexchart type="area" height="350" :options="priceChartOptions" :series="priceSeries"></apexchart>
             </q-tab-panel>
-            <q-tab-panel name="tvl" class="bg-dark-60">
+            <q-tab-panel name="tvl" class="bg-card">
               <apexchart type="area" height="350" :options="tvlChartOptions" :series="tvlSeries"></apexchart>
             </q-tab-panel>
-            <q-tab-panel name="volume" class="bg-dark-60">
+            <q-tab-panel name="volume" class="bg-card">
               <apexchart type="area" height="350" :options="volumeChartOptions" :series="volumeSeries"></apexchart>
             </q-tab-panel>
           </q-tab-panels>
         </q-card>
       </div>
-        <div v-else class="flex flex-center col-grow">
-          <q-spinner-pie
-            color="white"
-            size="4em"
-          />
-        </div>
+      <div v-else class="q-card bg-black col-grow">
+        <overlay-spinner />
+      </div>
     </div>
     <suspense>
       <template #default>
         <events-history :address="address" />
-      </template>
-      <template #fallback>
-        <div class="flex flex-center">
-          <q-spinner-pie
-            color="white"
-            size="4em"
-          />
-        </div>
       </template>
     </suspense>
   </q-page>
@@ -149,9 +138,15 @@ import moment from "moment";
 import EventsTable from "src/components/EventsTable.vue";
 import EventsHistory from "src/components/EventsHistory.vue";
 import PriceChange from "../components/PriceChange.vue";
+import OverlaySpinner from "src/components/OverlaySpinner.vue";
 
 export default defineComponent({
-  components: { EventsTable, EventsHistory, PriceChange},
+  components: {
+    EventsTable,
+    EventsHistory,
+    PriceChange,
+    OverlaySpinner
+  },
   name: "PoolPage",
   props: {
     address: String,

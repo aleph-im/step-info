@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import EventsTable from './EventsTable.vue'
 import poolhistoryquery from '../queries/pool_history.gql'
 import { client } from "../services/graphql"
@@ -14,12 +14,16 @@ export default defineComponent({
     address: String
   },
   async setup(props) {
-    let result = await client.request(poolhistoryquery, {
+    const events = ref([])
+    client.request(poolhistoryquery, {
       address: props.address,
+    }).then((result) => {
+      events.value = result.events
     });
+
     return {
-      ammId: props.address,
-      ...result,
+      events: events,
+      ammId: props.address
     }
   },
 })
