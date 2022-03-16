@@ -104,7 +104,7 @@
               <apexchart type="area" height="350" :options="priceChartOptions" :series="priceSeries"></apexchart>
             </q-tab-panel>
             <q-tab-panel name="tvl" class="bg-card">
-              <apexchart type="area" height="350" :options="tvlChartOptions" :series="tvlSeries"></apexchart>
+              <apexchart type="area" height="350" :options="tvlChartOptions" :series="tvlSeries" ></apexchart>
             </q-tab-panel>
             <q-tab-panel name="volume" class="bg-card">
               <apexchart type="area" height="350" :options="volumeChartOptions" :series="volumeSeries"></apexchart>
@@ -204,6 +204,8 @@ export default defineComponent({
     },
     tvlSeries() {
       let values = []
+      let coin_values = []
+      let pc_values = []
       let last_value = null
       //const USDs = ["USD", "CASH", "PAI"]
       //let has_usd = USDs.some(symbol => this.pool.pc.symbol.includes(symbol))
@@ -214,13 +216,23 @@ export default defineComponent({
         if (point[tvl_key] !== null) {
           last_value = point[tvl_key]
         }
+        coin_values.push(point.tvl_coin)
+        pc_values.push(point.tvl_pc)
         values.push(last_value)
       }
       return [
         {
-          name: "tvl",
+          name: "Total",
           data: values,
         },
+        {
+          name: this.pool.coin.symbol,
+          data: coin_values
+        },
+        {
+          name: this.pool.pc.symbol,
+          data: pc_values
+        }
       ]
     },
     priceChartOptions() {
@@ -283,13 +295,35 @@ export default defineComponent({
         tvl_format = `0,0 ${this.pool.coin.symbol}`
       }*/
       return {
-        yaxis: {
-          labels: {
-            formatter: function (val) {
-              return numeral(val).format(tvl_format);
+        yaxis: [
+          {
+            show: true,
+            min: (a, b) => {
+              return Math.min(...this.tvlSeries[0]["data"])*0.95
+            },
+            labels: {
+              formatter: function (val, opt) {
+                return numeral(val).format("0,0 $");
+              }
+            }
+          },
+          {
+            show: false,
+            labels: {
+              formatter: function (val, opt) {
+                return numeral(val).format("0,0");
+              }
+            }
+          },
+          {
+            show: false,
+            labels: {
+              formatter: function (val, opt) {
+                return numeral(val).format("0,0");
+              }
             }
           }
-        },
+        ],
         ...this.chartOptions
       }
     },
