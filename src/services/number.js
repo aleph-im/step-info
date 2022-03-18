@@ -65,3 +65,24 @@ export function bnDivPerc(numerator, denominator) {
 
     return round(perc * 100, 2)
 }
+
+export function scaleDecimalsFormat(value, symbol = "$") {
+  console.log("value to scale", value)
+  value = Number(value)
+  if(value >= 1) return "0,0.00 " + symbol
+
+  const decimals = value.toString().split('.')
+  if(decimals.length == 1) return "0,0.00 " + symbol
+
+  const decimalsArr = decimals[1].split("")
+  let posCount = 3
+  while(decimalsArr.length > 0 && decimalsArr[0] == 0) {
+    decimalsArr.shift()
+    posCount++
+  }
+  return "0,0." + "0".repeat(posCount) + " " + symbol
+}
+
+export function numeralFormat(value, symbol = "$") {
+  return numeral(value).format(scaleDecimalsFormat(value, symbol))
+}

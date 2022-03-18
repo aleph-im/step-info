@@ -21,13 +21,13 @@
           <q-avatar size="sm">
             <img :src="pool.pc.logoURI" />
           </q-avatar>
-          1 {{ pool.pc.symbol }} = {{ pool.stats.price < 99 ? (1/pool.stats.price).toFixed(4) : (1/pool.stats.price).toFixed(8) }} {{ pool.coin.symbol }} {{pool.isUSD ? "" : "(" + numeral(1/pool.stats.price*pool.stats.price_usd).format("0,0.00 $") + ")"}}
+          1 {{ pool.pc.symbol }} = {{ numeralFormat(1/pool.stats.price, "") }} {{ pool.coin.symbol }} {{pool.isUSD ? "" : "(" + numeralFormat(1/pool.stats.price*pool.stats.price_usd, "$") + ")"}}
         </q-card>
         <q-card class="q-pa-sm bg-step-gradient-bright">
           <q-avatar size="sm">
             <img :src="pool.coin.logoURI" />
           </q-avatar>
-          1 {{ pool.coin.symbol }} = {{ pool.stats.price > 0.1 ? (pool.stats.price).toFixed(4) : (pool.stats.price).toFixed(8) }} {{ pool.pc.symbol }} {{pool.isUSD ? "" : "(" + numeral(pool.stats.price_usd).format("0,0.00 $") + ")"}}
+          1 {{ pool.coin.symbol }} = {{ numeralFormat(pool.stats.price, "") }} {{ pool.pc.symbol }} {{pool.isUSD ? "" : "(" + numeralFormat(pool.stats.price_usd, "$") + ")"}}
         </q-card>
       </div>
       <div class="q-gutter-md">
@@ -139,6 +139,7 @@ import EventsTable from "src/components/EventsTable.vue";
 import EventsHistory from "src/components/EventsHistory.vue";
 import PriceChange from "../components/PriceChange.vue";
 import OverlaySpinner from "src/components/OverlaySpinner.vue";
+import { numeralFormat } from "../services/number"
 
 export default defineComponent({
   components: {
@@ -465,6 +466,7 @@ export default defineComponent({
     return {
       synced: synced,
       numeral,
+      numeralFormat,
       ...result,
       pool_hourly_data
     };
