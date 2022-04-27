@@ -299,9 +299,6 @@ export default defineComponent({
         yaxis: [
           {
             show: true,
-            min: (a, b) => {
-              return Math.min(...this.tvlSeries[0]["data"])*0.95
-            },
             labels: {
               formatter: function (val, opt) {
                 return numeral(val).format("0,0 $");
